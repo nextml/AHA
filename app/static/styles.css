@@ -1,0 +1,46 @@
+.app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #2c3e50;
+  width: 100vw;
+  margin-left: 70px;
+}
+
+.text--center {
+  text-align: center
+}
+
+.caption-img {
+  width: 50%;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: space-around;
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+.input-buttons {
+  margin-top: 30px;
+}
+
+.input-button {
+  width: 25vw;
+}
+
+h1 {
+  font-size: 40px;
+}
+
+select {
+  -webkit-appearance: menulist-button;
+  height: 50px;
+}

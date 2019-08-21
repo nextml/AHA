@@ -1,0 +1,26 @@
+<html>
+    <head>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
+        <title>NEXT - Caption Comparator</title>
+    </head>
+    <body class="app">
+	<div class="text--center">
+        	<h1 style="margin-top: 40px">NEXT Caption Comparator</h1>
+		<h3>Enter your caption and compare it against our bank of captions to see whos is funnier!</h3>
+	</div>
+	<hr>
+	<div>
+		<img class="caption-img center" src="{{ url }}"/>
+	</div>
+	<hr>
+	<div class="flex-container input-buttons">
+		<input type="text" name="FirstName" placeholder="Enter your caption here..." class="input-button">
+		<select class="input-button">
+			{% for option in options %}
+			<option value="{{ option }}">{{ option }}</option>
+			{% endfor %}
+		</select>
+		<button>Compare Captions</button>
+	</div>
+    </body>
+</html>
