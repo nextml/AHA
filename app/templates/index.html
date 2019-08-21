@@ -4,26 +4,26 @@
         <title>NEXT - Caption Comparator</title>
     </head>
     <body class="app">
-	<div class="text--center">
+	<div class="text--center margin">
         	<h1 style="margin-top: 40px">NEXT Caption Comparator</h1>
 		<h3>Enter your caption and compare it against our bank of captions to see whos is funnier!</h3>
 	</div>
 	<hr>
-	<div>
+	<div class="margin">
 		<img class="caption-img center" src="{{ url }}"/>
 	</div>
-	<form action="/next_cartoon" method="post">
+	<form action="/next_cartoon" method="post" class="margin">
 		<button class="center" value="{{ id }}" name="id" type="submit">Next Cartoon</button>
 	</form>
 	<hr>
-	<div class="flex-container input-buttons">
-		<input type="text" name="FirstName" placeholder="Enter your caption here..." class="input-button">
-		<select class="input-button">
+	<form action="" method="post" class="flex-container input-buttons margin">
+		<input type="text" name="FirstName" placeholder="Enter your caption here..." class="input-button {{ 'caption-winner' if winner == 0 }}" name="user_input">
+		<select class="input-button {{ 'caption-winner' if winner == 1 }}" name="selected_caption">
 			{% for option in options %}
 			<option value="{{ option }}">{{ option }}</option>
 			{% endfor %}
 		</select>
-		<button>Compare Captions</button>
-	</div>
+		<button type="submit">Compare Captions</button>
+	</form>
     </body>
 </html>
