@@ -1,15 +1,26 @@
-from flask import render_template
+import json
+from flask import render_template, request
 from app import app
 
 @app.route('/')
 @app.route('/index')
 def index():
-    url = "https://raw.githubusercontent.com/nextml/caption-contest-data/master/contests/info/adaptive/657/657.jpg?raw=true"
-    options = [
-        "option 1",
-        "option 2",
-        "option 3",
-        "option 4",
-        "option 5"
-    ]
-    return render_template('index.html', url=url, options=options)
+    with app.open_resource('data.json') as data_file:
+        data = json.loads(data_file.read())
+    data = data[0]
+    return render_template('index.html', url=data['img'], options=data['captions'], id=0)
+
+@app.route('/next_cartoon', methods=["POST"])
+def next_cartoot():
+
+    next_id = int(request.form['id']) + 1
+
+    with app.open_resource('data.json') as data_file:
+        data = json.loads(data_file.read())
+
+    if int(next_id) >= len(data):
+        next_id = 0
+    data = data[next_id]
+    return render_template('index.html', url=data['img'], options=data['captions'], id=next_id)
+
+

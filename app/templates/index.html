@@ -12,6 +12,9 @@
 	<div>
 		<img class="caption-img center" src="{{ url }}"/>
 	</div>
+	<form action="/next_cartoon" method="post">
+		<button class="center" value="{{ id }}" name="id" type="submit">Next Cartoon</button>
+	</form>
 	<hr>
 	<div class="flex-container input-buttons">
 		<input type="text" name="FirstName" placeholder="Enter your caption here..." class="input-button">
