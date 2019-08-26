@@ -25,5 +25,32 @@
 		</select>
 		<button type="submit">Compare Captions</button>
 	</form>
+	<hr>
+	<div class="margin">
+		<h1 style="margin-top: 20px" class="text--center">Results</h1>
+		{% if winner == -1 %}
+		<h3 class="text--center">No results to display at this time</h3>
+		{% else %}
+		<div style="margin-left: 120px">
+			{% if confidence is not none %}
+			<div>
+				<h2>Statistics</h2>
+				<p>Confidence: {{ confidence * 100 }}%</p>
+			</div>
+			{% endif %}
+			{% if similar is not none %}
+			<div>	
+				<h2>Most Similar</h2>
+				<p>These captions are the most similar to your entered caption:</p>
+				<ul>
+				{% for s in similar %}
+					<li>{{ s }}</li>
+				{% endfor %}
+				</ul>
+			</div>
+			{% endif %}
+		</div>
+		{% endif %}
+	</div>
     </body>
 </html>
