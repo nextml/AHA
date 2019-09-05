@@ -12,9 +12,14 @@
 	<div class="margin">
 		<img class="caption-img center" src="{{ url }}"/>
 	</div>
-	<form action="/next_cartoon" method="post" class="margin">
-		<button class="center" value="{{ id }}" name="id" type="submit">Next Cartoon</button>
-	</form>
+	<div class="margin" style="display: flex; justify-content: center">
+		<form action="/next_cartoon" method="post">
+			<button class="center" value="{{ id }}" name="id" type="submit">Next Cartoon</button>
+		</form>
+		<form action="/" method="get" style="margin-left: 10px;">
+			<button class="center" type="submit">Reset</button>
+		</form>
+	</div>
 	<hr>
 	<form action="/compare_captions" method="post" class="flex-container input-buttons margin">
 		<input type="text" name="user_caption" value="{{ c1 if c1 is not none }}" placeholder="Enter your caption here..." class="input-button {{ 'caption-winner' if winner == 0 }} {{ 'caption-loser' if winner == 1 }}" name="user_input">
