@@ -18,7 +18,7 @@ def load_data():
 @app.route('/index')
 def index():
     data = load_data()[0]
-    return render_template('index.html', url=data['img'], options=data['captions'], id=0, winner=-1, confidence=None, similar=None)
+    return render_template('index.html', url=data['img'], options=data['captions'], id=0, winner=-1, confidence=None, similar=None, c1=None, c2=None)
 
 
 @app.route('/next_cartoon', methods=["POST"])
@@ -31,7 +31,7 @@ def next_cartoon():
         next_id = 0
 
     data = data[next_id]
-    return render_template('index.html', url=data['img'], options=data['captions'], id=next_id, winner=1, confidence=0.87, similar=["1", "2", "3"])
+    return render_template('index.html', url=data['img'], options=data['captions'], id=next_id, winner=1, confidence=0.87, similar=["1", "2", "3"], c1=None, c2=None)
 
 
 @app.route('/compare_captions', methods=["POST"])
@@ -41,10 +41,10 @@ def compare_captions():
     selected_caption = request.form['selected_caption']
     info = comparator.compare_captions(user_caption, selected_caption, 530)
     winner = 0 if info['funnier'] == 1.0 else 1
-    confidence = info['proba']
+    confidence = int(100 * info['proba'])
     print(info)
 
     id = int(request.form['id'])
     data = load_data()[id]
 
-    return render_template('index.html', url=data['img'], options=data['captions'], id=id, winner=winner, confidence=confidence, similar=['c1', 'c2', 'c3'])
+    return render_template('index.html', url=data['img'], options=data['captions'], id=id, winner=winner, confidence=confidence, similar=['c1', 'c2', 'c3'], c1=user_caption, c2=selected_caption)
