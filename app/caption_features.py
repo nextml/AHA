@@ -2,7 +2,7 @@
 # Author: Scott Sievert (https://github.com/stsievert)
 #
 import pandas as pd
-import syllabels_en
+from app import syllabels_en
 import pickle
 from textblob import TextBlob
 import torch

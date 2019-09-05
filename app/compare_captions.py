@@ -11,13 +11,13 @@ import requests
 import pandas as pd
 import joblib
 
-import caption_features
+from app import caption_features
 
 # ArrayLike = Union[np.ndarray, pd.DataFrame, dask.dataframe.DataFrame,
 #                   cupy.ndaray, ...]
 ArrayLike = TypeVar("ArrayLike")
 
-ESTs = joblib.load("../../prediction/Random-Forest/viz-data/models.joblib")
+ESTs = joblib.load("./app/models.joblib")
 nlp = None
 
 # fmt: off
@@ -157,6 +157,12 @@ def get_meta(contest):
         contexts = yaml.load(f, Loader=yaml.FullLoader)
     return contexts[contest], anoms[contest]
 
+def compare_captions(c1, c2, contest):
+    f1 = get_features(c1, contest)
+    f2 = get_features(c2, contest)
+    diff = f1 - f2
+    info = predict(diff, contest)
+    return info
 
 if __name__ == "__main__":
     initialize()  # 15.98s
@@ -169,5 +175,4 @@ if __name__ == "__main__":
 
     diff = f1 - f2
     info = predict(diff, contest)  # 0.00252s
-    assert info["funnier"] == 1.0
-    assert info["proba"] >= 0.50 + 0.09  # 59% looks like upper limit on proba
+    print(info)

@@ -2,6 +2,11 @@ import json
 from flask import render_template, request
 from app import app
 from functools import lru_cache
+from app import compare_captions as comparator
+
+# Initialize models
+comparator.initialize()
+
 
 @lru_cache()
 def load_data():
@@ -34,12 +39,12 @@ def compare_captions():
 
     user_caption = request.form['user_caption']
     selected_caption = request.form['selected_caption']
-    funnier = 0
-    confidence = 0.90
+    info = comparator.compare_captions(user_caption, selected_caption, 530)
+    winner = 0 if info['funnier'] == 1.0 else 1
+    confidence = info['proba']
+    print(info)
 
     id = int(request.form['id'])
     data = load_data()[id]
 
-    return render_template('index.html', url=data['img'], options=data['captions'], id=id, winner=funnier, confidence=0.90, similar=['c1', 'c2', 'c3'])
-
-    return ''
+    return render_template('index.html', url=data['img'], options=data['captions'], id=id, winner=winner, confidence=confidence, similar=['c1', 'c2', 'c3'])
