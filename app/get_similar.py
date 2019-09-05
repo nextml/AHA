@@ -1,14 +1,19 @@
 #
 # Author: Scott Sievert (https://github.com/stsievert)
 #
-import nltk
-import numpy as np
-from models import InferSent
-import torch
 from time import time
 from typing import TypeVar, List
+from io import StringIO
+
+import nltk
+import numpy as np
+import requests
 from scipy.spatial.distance import cdist, squareform
+import torch
 from toolz import topk
+import pandas as pd
+
+from models import InferSent
 
 model = None
 ArrayLike = TypeVar("ArrayLike")
@@ -52,7 +57,7 @@ def get_embedding(sents: List[str], verbose=False) -> ArrayLike:
     return embeddings
 
 
-def get_closest_indices(new_sent, feats, k=3):
+def get_closest_indices(new_sent: str, feats: ArrayLike, k=3) -> List[int]:
     """
     Parameters
     ----------
@@ -77,9 +82,15 @@ def get_closest_indices(new_sent, feats, k=3):
     return idxs[::-1]
 
 
-if __name__ == "__main__":
-    initialize(download=False)  # 9.87 without download
+def _get_captions(contest: int) -> List[str]:
+    base = "https://raw.githubusercontent.com/nextml/caption-contest-data/master/"
+    filepath = "contests/summaries/651_summary_KLUCB.csv"
+    r = requests.get(base + filepath)
+    with StringIO(initial_value=r.text) as f:
+        df = pd.read_csv(f)
+    return df.caption.tolist()
 
+def test_get_closest():
     sents = [
         "Everyone really likes the newest benefits",
         "The Government Executive articles housed on the website are not able to be searched .",
@@ -97,3 +108,20 @@ if __name__ == "__main__":
     assert closest_sentence == "I know exactly ."
     second_closest = sents[idxs[1]]
     assert second_closest == 'Everyone really likes the newest benefits'
+
+if __name__ == "__main__":
+    initialize(download=False)  # 9.87 without download
+
+    test_get_closest()
+
+    new_sent = "You should keep it wrapped until the swelling goes down."
+    contest = 651
+
+    caps = _get_captions(contest)  # 0.26s; do this once
+    feats = get_embedding(caps)  # do this once; 142.31s
+    idxs = get_closest_indices(new_sent, feats, k=4)  # 0.568seconds
+
+    assert caps[idxs[0]] == new_sent
+    assert caps[idxs[1]] == "This should keep you from getting so wound up."
+    assert caps[idxs[2]] == "This should keep the swelling down for now."
+    assert caps[idxs[3]] == "This should keep the swelling down."
