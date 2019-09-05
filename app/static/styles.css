@@ -7,7 +7,7 @@
 }
 
 .margin {
-	margin-left: 70px;
+  margin-left: 70px;
 }
 
 .text--center {
@@ -19,10 +19,18 @@
 }
 
 .caption-winner {
-  border-left: 3px solid green;
-  border-right: 3px solid green;
-  border-top: 3px solid green;
-  border-bottom: 3px solid green;
+  border-left: 10px solid rgb(7, 255, 7);
+  border-right:  10px solid rgb(7, 255, 7);
+  border-top:  10px solid rgb(7, 255, 7);
+  border-bottom:  10px solid rgb(7, 255, 7);
+
+}
+
+.caption-loser {
+  border-left: 10px solid rgb(255, 0, 0);
+  border-right: 10px solid rgb(255, 0, 0);
+  border-top: 10px solid rgb(255, 0, 0);
+  border-bottom: 10px solid rgb(255, 0, 0);
 }
 
 .center {

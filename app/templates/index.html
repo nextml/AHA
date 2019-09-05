@@ -17,14 +17,19 @@
 	</form>
 	<hr>
 	<form action="/compare_captions" method="post" class="flex-container input-buttons margin">
-		<input type="text" name="user_caption" placeholder="Enter your caption here..." class="input-button {{ 'caption-winner' if winner == 0 }}" name="user_input">
-		<select class="input-button {{ 'caption-winner' if winner == 1 }}" name="selected_caption">
+		<input type="text" name="user_caption" placeholder="Enter your caption here..." class="input-button {{ 'caption-winner' if winner == 0 }} {{ 'caption-loser' if winner == 1 }}" name="user_input">
+		<select class="input-button {{ 'caption-winner' if winner == 1 }} {{ 'caption-loser' if winner == 0 }}" name="selected_caption">
 			{% for option in options %}
 			<option value="{{ option }}">{{ option }}</option>
 			{% endfor %}
 		</select>
 		<button type="submit" value="{{ id }}" name="id">Compare Captions</button>
 	</form>
+	{% if winner != -1 %}
+	<div>
+		<h3 class="text--center">Caption {{ winner + 1 }} was the funnier caption with {{ confidence * 100 }}% confidence.</h3>
+	</div>
+	{% endif %}
 	<hr>
 	<div class="margin">
 		<h1 style="margin-top: 20px" class="text--center">Results</h1>
