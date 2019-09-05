@@ -3,7 +3,7 @@
 #
 import nltk
 import numpy as np
-from models import InferSent
+from app.models import InferSent
 import torch
 from time import time
 from typing import TypeVar, List
@@ -75,6 +75,15 @@ def get_closest_indices(new_sent, feats, k=3):
     vals = topk(k, -dists)
     idxs = [k for k, v in enumerate(dists) if -v in vals]
     return idxs[::-1]
+
+
+def get_most_similar(new, sentences):
+    feats = get_embedding(sentences)
+    idxs = get_closest_indices(new, feats, k=3)  # 0.0936 secs
+    o = sentences[idxs[0]]
+    tw = sentences[idxs[1]]
+    th = sentences[idxs[2]]
+    return [o, tw, th]
 
 
 if __name__ == "__main__":

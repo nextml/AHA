@@ -2,7 +2,7 @@
 	{
 		"id": 1,
 		"img": "https://raw.githubusercontent.com/nextml/caption-contest-data/master/contests/info/adaptive/657/657.jpg?raw=true",
-		"model": "",
+		"contest": 530,
 		"captions": [
 			"option 1",
 			"option 2",
@@ -13,20 +13,8 @@
 	},
 	{
 		"id": 2,
-		"img": "https://images-na.ssl-images-amazon.com/images/I/81Hh6ik2fGL._SY450_.jpg",
-		"model": "",
-		"captions": [
-			"choice 1",
-			"choice 2",
-			"choice 3",
-			"choice 4",
-			"choice 5"
-		]
-	},
-	{
-		"id": 3,
 		"img": "https://raw.githubusercontent.com/nextml/caption-contest-data/master/contests/info/adaptive/651/651.jpg?raw=true",
-		"model": "",
+		"contest": 530,
 		"captions": [
 			"choice 1",
 			"choice 2",

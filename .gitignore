@@ -2,3 +2,6 @@
 *.pyc
 *.swp
 /__pycache__
+/encoder
+/GloVe
+/fastText

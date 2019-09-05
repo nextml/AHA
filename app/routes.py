@@ -3,9 +3,14 @@ from flask import render_template, request
 from app import app
 from functools import lru_cache
 from app import compare_captions as comparator
+from app import get_similar as similarity 
 
 # Initialize models
+
+print('Initializing caption funniness comparator.....')
 comparator.initialize()
+print('Initializing caption similarity comparator....')
+similarity.initialize()
 
 
 @lru_cache()
@@ -31,20 +36,23 @@ def next_cartoon():
         next_id = 0
 
     data = data[next_id]
-    return render_template('index.html', url=data['img'], options=data['captions'], id=next_id, winner=1, confidence=0.87, similar=["1", "2", "3"], c1=None, c2=None)
+    return render_template('index.html', url=data['img'], options=data['captions'], id=next_id, winner=-1, confidence=None, similar=None, c1=None, c2=None)
 
 
 @app.route('/compare_captions', methods=["POST"])
 def compare_captions():
 
-    user_caption = request.form['user_caption']
-    selected_caption = request.form['selected_caption']
-    info = comparator.compare_captions(user_caption, selected_caption, 530)
-    winner = 0 if info['funnier'] == 1.0 else 1
-    confidence = int(100 * info['proba'])
-    print(info)
-
     id = int(request.form['id'])
     data = load_data()[id]
+    contest = data['contest']
 
-    return render_template('index.html', url=data['img'], options=data['captions'], id=id, winner=winner, confidence=confidence, similar=['c1', 'c2', 'c3'], c1=user_caption, c2=selected_caption)
+    user_caption = request.form['user_caption']
+    selected_caption = request.form['selected_caption']
+    info = comparator.compare_captions(user_caption, selected_caption, contest)
+    winner = 0 if info['funnier'] == 1.0 else 1
+    confidence = int(100 * info['proba'])
+
+    caps = data['captions']
+    similar = similarity.get_most_similar(user_caption, caps)
+
+    return render_template('index.html', url=data['img'], options=data['captions'], id=id, winner=winner, confidence=confidence, similar=similar, c1=user_caption, c2=selected_caption)
