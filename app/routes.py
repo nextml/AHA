@@ -3,15 +3,11 @@ from flask import render_template, request
 from app import app
 from functools import lru_cache
 from app import compare_captions as comparator
-from app import get_similar as similarity 
 
 # Initialize models
 
 print('Initializing caption funniness comparator.....')
 comparator.initialize()
-print('Initializing caption similarity comparator.....')
-similarity.initialize()
-
 
 @lru_cache()
 def load_data():

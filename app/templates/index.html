@@ -22,46 +22,35 @@
 	</div>
 	<hr>
 	<form action="/compare_captions" method="post" class="flex-container input-buttons margin">
-		<input type="text" name="user_caption" value="{{ c1 if c1 is not none }}" placeholder="Enter your caption here..." class="input-button {{ 'caption-winner' if winner == 0 }} {{ 'caption-loser' if winner == 1 }}" name="user_input">
-		<input type="text" list="caps" class="input-button {{ 'caption-winner' if winner == 1 }} {{ 'caption-loser' if winner == 0 }}" name="selected_caption" value="{{ '' if c2 is none else c2 }}" placeholder="Enter or select an existingn caption">
-		<datalist id="caps">	
-			{% for option in options %}
-			<option value="{{ option }}" {% if c2 == option %} selected="selected"{% endif %}>{{ option }}</option>
-			{% endfor %}
-		</datalist>
-		<button type="submit" value="{{ id }}" name="id">Compare Captions</button>
+		<div>
+			<input type="text" name="user_caption" value="{{ c1 if c1 is not none }}" placeholder="Enter your caption here..." class="input-button {{ 'caption-winner' if winner == 0 }} {{ 'caption-loser' if winner == 1 }}" name="user_input">
+		</div>
+		<div>
+			<table>
+				<tr>
+					<th>Rank</th>
+					<th>Funnier</th>
+					<th>Caption</th>
+					<th>Score</th>
+				</tr>
+				{% for option in options %}
+				<tr>
+					<td align="center">{{loop.index}}</td>
+					<td align="center">yes</td>
+					<td>{{ option }}</td>
+					<td align="center">0.5</td>
+				</tr>
+				{% endfor %}
+			</table>
+		</div>
+		<div>
+			<button type="submit" value="{{ id }}" name="id">Compare Captions</button>
+		</div>
 	</form>
 	{% if winner != -1 %}
 	<div>
 		<h3 class="text--center">"{{ c1 if winner == 0 else c2 }}" was the funnier caption with {{ confidence }}% confidence</h3>
 	</div>
 	{% endif %}
-	<hr>
-	<div class="margin">
-		<h1 style="margin-top: 20px" class="text--center">Results</h1>
-		{% if winner == -1 %}
-		<h3 class="text--center">No results to display at this time</h3>
-		{% else %}
-		<div style="margin-left: 120px">
-			{% if confidence is not none %}
-			<div>
-				<h2>Statistics</h2>
-				<p>Confidence: {{ confidence }}%</p>
-			</div>
-			{% endif %}
-			{% if similar is not none %}
-			<div>	
-				<h2>Most Similar</h2>
-				<p>The following captions are the most similar to the text entered:</p>
-				<ul>
-				{% for s in similar %}
-					<li>{{ s }}</li>
-				{% endfor %}
-				</ul>
-			</div>
-			{% endif %}
-		</div>
-		{% endif %}
-	</div>
     </body>
 </html>
