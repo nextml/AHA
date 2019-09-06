@@ -17,7 +17,7 @@ from app import caption_features
 #                   cupy.ndaray, ...]
 ArrayLike = TypeVar("ArrayLike")
 
-ESTs = joblib.load("./app/models.joblib")
+ESTs = joblib.load("./models.joblib")
 nlp = None
 
 # fmt: off
@@ -46,7 +46,6 @@ cols = [
     "sim_context_max", "sim_diff_90_percentile", "sim_diff_max",
     "sim_diff_mean", "sim_diff_median"
 ]
-
 # fmt: on
 
 
@@ -98,6 +97,7 @@ def predict(diff: ArrayLike, contest: int) -> Dict[str, float]:
     return {"funnier": label.item(), "proba": proba.item()}
 
 
+@lru_cache()
 def get_features(c: str, contest: int):
     """
     Parameters
@@ -144,6 +144,7 @@ def get_cached_df(contest, alg_label, verbose=True):
     return df
 
 
+@lru_cache()
 def get_meta(contest):
     base = "https://raw.githubusercontent.com/nextml/caption-contest-data/master/"
     fname = "contests/metadata/anomalies.yaml"
@@ -157,22 +158,60 @@ def get_meta(contest):
         contexts = yaml.load(f, Loader=yaml.FullLoader)
     return contexts[contest], anoms[contest]
 
+
+@lru_cache()
 def compare_captions(c1, c2, contest):
     f1 = get_features(c1, contest)
     f2 = get_features(c2, contest)
     diff = f1 - f2
     info = predict(diff, contest)
+    info.update(
+        {
+            "caption_pos": c1,
+            "caption_neg": c2,
+            "contest": contest
+        }
+    )
     return info
+
+
+def rank_captions(caps, contest):
+    out = []
+    for c1 in caps:
+        for c2 in caps:
+            if c1 == c2:
+                continue
+            out.append(compare_captions(c1, c2, contest))
+    out = pd.DataFrame(out)
+    pairwise = out.pivot_table(
+        index="caption_neg",
+        columns="caption_pos",
+        values="funnier",
+    )
+    borda = pairwise.sum(skipna=True)
+    borda.sort_values(ascending=False, inplace=True)
+    borda += borda.min()
+    borda /= borda.max()
+    return borda
+
 
 if __name__ == "__main__":
     initialize()  # 15.98s
 
     contest = 530
-    top_caption = "The consensus of your wise men is: move the chair."
-    f1 = get_features(top_caption, contest)  # 0.686s
-    f2 = get_features("foo", contest)  # 0.468s
-    assert (f1.index == f2.index).all()
+    captions = [
+        "The latest polls show you hanging on by a thread.",
+        "The Queen says she wants half of everything.",
+        "It appears your character is getting cut from Season 7.",
+        "It's a recall notice from the Acme Twine and Rope company.",
+        "First off, we need to renew your life insurance policy.",
+        "It's a gift from your eldest son.",
+    ]
+    p = rank_captions(captions, contest)
+    #  f1 = get_features(top_caption, contest)  # 0.686s
+    #  f2 = get_features("foo", contest)  # 0.468s
+    #  assert (f1.index == f2.index).all()
 
-    diff = f1 - f2
-    info = predict(diff, contest)  # 0.00252s
-    print(info)
+    #  diff = f1 - f2
+    #  info = predict(diff, contest)  # 0.00252s
+    #  print(info)
