@@ -9,7 +9,7 @@ from app import get_similar as similarity
 
 print('Initializing caption funniness comparator.....')
 comparator.initialize()
-print('Initializing caption similarity comparator....')
+print('Initializing caption similarity comparator.....')
 similarity.initialize()
 
 
