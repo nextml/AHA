@@ -6,18 +6,20 @@ import yaml
 from io import StringIO
 from functools import lru_cache
 from typing import Dict, TypeVar
+from pathlib import Path
 
 import requests
 import pandas as pd
 import joblib
 
-from app import caption_features
+from . import caption_features
 
 # ArrayLike = Union[np.ndarray, pd.DataFrame, dask.dataframe.DataFrame,
 #                   cupy.ndaray, ...]
 ArrayLike = TypeVar("ArrayLike")
 
-ESTs = joblib.load("./models.joblib")
+_p = Path(__file__).parent / "models.joblib"
+ESTs = joblib.load(str(_p))
 nlp = None
 
 # fmt: off
@@ -190,28 +192,6 @@ def rank_captions(caps, contest):
     )
     borda = pairwise.sum(skipna=True)
     borda.sort_values(ascending=False, inplace=True)
-    borda += borda.min()
+    borda -= borda.min()
     borda /= borda.max()
     return borda
-
-
-if __name__ == "__main__":
-    initialize()  # 15.98s
-
-    contest = 530
-    captions = [
-        "The latest polls show you hanging on by a thread.",
-        "The Queen says she wants half of everything.",
-        "It appears your character is getting cut from Season 7.",
-        "It's a recall notice from the Acme Twine and Rope company.",
-        "First off, we need to renew your life insurance policy.",
-        "It's a gift from your eldest son.",
-    ]
-    p = rank_captions(captions, contest)
-    #  f1 = get_features(top_caption, contest)  # 0.686s
-    #  f2 = get_features("foo", contest)  # 0.468s
-    #  assert (f1.index == f2.index).all()
-
-    #  diff = f1 - f2
-    #  info = predict(diff, contest)  # 0.00252s
-    #  print(info)

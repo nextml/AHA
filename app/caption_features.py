@@ -2,7 +2,6 @@
 # Author: Scott Sievert (https://github.com/stsievert)
 #
 import pandas as pd
-from app import syllabels_en
 import pickle
 from textblob import TextBlob
 import torch
@@ -17,6 +16,8 @@ from pytorch_pretrained_bert import (
     OpenAIGPTModel,
     OpenAIGPTLMHeadModel,
 )
+
+from . import syllabels_en
 
 model = None
 tokenizer = None
