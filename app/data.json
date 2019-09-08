@@ -14,5 +14,13 @@
 		"captions": [
 			"People in front of mantle."
 		]
+	},
+	{
+		"id": 3,
+		"img": "https://raw.githubusercontent.com/nextml/caption-contest-data/master/contests/info/adaptive/617/617.jpg",
+		"contest": 617,
+		"captions": [
+			"Astronaughts in a typical party."
+		]
 	}
 ]

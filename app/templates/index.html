@@ -5,7 +5,7 @@
     </head>
     <body class="app">
 	<div class="text--center margin">
-        	<h1 style="margin-top: 40px">NEXT Caption Comparator</h1>
+        	<h1 style="margin-top: 40px">HUMAN: a Humor Advancement ContraptioN</h1>
 		<h3>Bellow is an image from the New Yorker Caption Contest. Enter captions to see how they stack up against one another!</h3>
 	</div>
 	<hr>
@@ -22,13 +22,14 @@
 		</form>
 	</div>
 	<hr>
-	<form action="/compare_captions" method="post" class="flex-container input-buttons margin">
+	<form action="/compare_captions" method="post" class="flex-container input-buttons margin" id="f1">
 		<div>
 			<textarea name="user_caption" value="{{ c1 if c1 is not none }}" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." class="input-button {{ 'caption-winner' if winner == 0 }} {{ 'caption-loser' if winner == 1 }}" name="user_input" style="resize: none; height: 20vw; font-size: 14px" cols=20></textarea>
 		</div>
 		<div>
 			<input name="session" type="hidden" value="{{session}}">
-			<button type="submit" value="{{ id }}" name="id">Rank New Captions</button>
+			<button type="submit" value="{{ id }}" name="id" id="compare" onclick="disableCompare()">Rank New Captions</button>
+			<div class="loader" style="opacity: 0;" id="spin"></div>
 		</div>
 		<div>
 			<table style="width: 40vw">
@@ -38,8 +39,8 @@
 					<th>Caption</th>
 				</tr>
 				{% for key, value in options.items() %}
-				<tr>
-					<td align="center">{{loop.index}}</td>
+				<tr id="reload" {% if key in new %} bgcolor="yellow"{% endif %}>
+					<td align="center" id="reload">{{loop.index}}</td>
 					<td align="center">{{value}}</td>
 					<td>{{key}}</td>
 				</tr>
@@ -48,4 +49,10 @@
 		</div>
 	</form>
     </body>
+    <script>
+	function disableCompare() {
+		document.getElementById('spin').style.opacity = 1.0;
+		document.getElementById('f1').submit();
+	}
+    </script>
 </html>

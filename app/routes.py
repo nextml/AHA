@@ -53,6 +53,11 @@ def compare_captions():
     data = load_data()[id]
 
     user_caption = request.form['user_caption']
+
+    if (user_caption is None or user_caption.strip().strip('\n') == '') and len(data['captions']) == 1:
+        ret = get_init_options(data)
+        return render_template('index.html', url=data['img'], options=ret, id=id)
+
     caps = user_caption.split('\n')
     caps = [c for c in caps if c != '' and c != '\n']
     if 'captions' not in session:
@@ -63,4 +68,9 @@ def compare_captions():
     ranks = comparator.rank_captions(session['captions'], data['contest'])
     ranks = ranks.round(2)
 
-    return render_template('index.html', url=data['img'], options=ranks.to_dict(), id=id)
+    new = []
+    for k, v in ranks.to_dict().items():
+        if k in caps:
+            new.append(k)
+
+    return render_template('index.html', url=data['img'], options=ranks.to_dict(), id=id, new=new)
