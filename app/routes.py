@@ -2,14 +2,14 @@ import json
 from flask import render_template, request, redirect, session
 from app import app
 from functools import lru_cache
-from app import compare_captions
+from app import compare_captions as comparator
 
 # Initialize models
 
 app.secret_key = 'joe'
 
 print('Initializing caption funniness comparator.....')
-compare_captions.initialize()
+comparator.initialize()
 # comparator.initialize()
 
 @lru_cache()
@@ -18,10 +18,18 @@ def load_data():
         data = json.loads(data_file.read())
     return data
 
+def get_init_options(data):
+    session['captions'] = data['captions']
+    ret = {}
+    for d in session['captions']:
+        ret[d] = ' -- '
+    return ret
+
 @app.route('/')
 def index():
     data = load_data()[0]
-    return render_template('index.html', url=data['img'], options=data['captions'], id=0, winner=-1, confidence=None, similar=None, c1=None, c2=None)
+    ret = get_init_options(data)
+    return render_template('index.html', url=data['img'], options=ret, id=0)
 
 
 @app.route('/next_cartoon', methods=["POST"])
@@ -34,7 +42,8 @@ def next_cartoon():
         next_id = 0
 
     data = data[next_id]
-    return render_template('index.html', url=data['img'], options=data['captions'], id=next_id, winner=-1, confidence=None, similar=None, c1=None, c2=None)
+    ret = get_init_options(data)
+    return render_template('index.html', url=data['img'], options=ret, id=next_id)
 
 
 @app.route('/compare_captions', methods=["POST"])
@@ -45,12 +54,13 @@ def compare_captions():
 
     user_caption = request.form['user_caption']
     caps = user_caption.split('\n')
-    if 'caption' not in session:
+    caps = [c for c in caps if c != '' and c != '\n']
+    if 'captions' not in session:
         session['captions'] = caps
     else:
-        session['captions'].append(caps)
+        session['captions'] = session['captions'] + caps
 
-    ranks = compare_captions.rank_captions(session['captions'], data['contest'])
-    print(ranks)
+    ranks = comparator.rank_captions(session['captions'], data['contest'])
+    ranks = ranks.round(2)
 
-    return render_template('index.html', url=data['img'], options=ranks['caption'].values, id=id, winner='', confidence='', similar='', c1='')
+    return render_template('index.html', url=data['img'], options=ranks.to_dict(), id=id)

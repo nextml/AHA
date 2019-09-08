@@ -6,7 +6,7 @@
     <body class="app">
 	<div class="text--center margin">
         	<h1 style="margin-top: 40px">NEXT Caption Comparator</h1>
-		<h3>Enter your caption and compare it against our bank of captions to see whos is funnier!</h3>
+		<h3>Bellow is an image from the New Yorker Caption Contest. Enter captions to see how they stack up against one another!</h3>
 	</div>
 	<hr>
 	<div class="margin">
@@ -27,27 +27,25 @@
 			<textarea name="user_caption" value="{{ c1 if c1 is not none }}" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." class="input-button {{ 'caption-winner' if winner == 0 }} {{ 'caption-loser' if winner == 1 }}" name="user_input" style="resize: none; height: 20vw; font-size: 14px" cols=20></textarea>
 		</div>
 		<div>
-			<table>
+			<input name="session" type="hidden" value="{{session}}">
+			<button type="submit" value="{{ id }}" name="id">Rank New Captions</button>
+		</div>
+		<div>
+			<table style="width: 40vw">
 				<tr>
 					<th>Rank</th>
-					<th>Funnier</th>
-					<th>Caption</th>
 					<th>Score</th>
+					<th>Caption</th>
 				</tr>
-				{% for option in options %}
+				{% for key, value in options.items() %}
 				<tr>
 					<td align="center">{{loop.index}}</td>
-					<td align="center">yes</td>
-					<td>{{ option }}</td>
-					<td align="center">0.5</td>
+					<td align="center">{{value}}</td>
+					<td>{{key}}</td>
 				</tr>
 				{% endfor %}
 			</table>
 		</div>
-		<div>
-			<input name="session" type="hidden" value="{{session}}">
-			<button type="submit" value="{{ id }}" name="id">Compare Captions</button>
-		</div>
 	</form>
-    <n/body>
+    </body>
 </html>
