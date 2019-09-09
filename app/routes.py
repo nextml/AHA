@@ -9,8 +9,9 @@ from . import compare_captions as comparator
 
 app.secret_key = str(hash("joes-secret_key"))
 
-print('Initializing caption funniness comparator.....')
+print('Initializing caption funniness comparator...')
 comparator.initialize()
+print("...done")
 
 @lru_cache()
 def load_data():
