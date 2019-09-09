@@ -1,16 +1,16 @@
 import json
 from flask import render_template, request, redirect, session
-from app import app
 from functools import lru_cache
-from app import compare_captions as comparator
+
+from . import app
+from . import compare_captions as comparator
 
 # Initialize models
 
-app.secret_key = 'joe'
+app.secret_key = str(hash("joes-secret_key"))
 
 print('Initializing caption funniness comparator.....')
 comparator.initialize()
-# comparator.initialize()
 
 @lru_cache()
 def load_data():
