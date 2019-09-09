@@ -5,10 +5,9 @@
     </head>
     <body class="app">
 	<div class="text--center margin">
-        	<h1 style="margin-top: 40px">HUMAN: a Humor Advancement ContraptioN</h1>
-		<h3>Bellow is an image from the New Yorker Caption Contest. Enter captions to see how they stack up against one another!</h3>
+        	<h1 style="margin-top: 40px">AHA: an AI Humor Assisstant</h1>
+		<h3>Here's a New Yorker Caption Contest cartoon:</h3>
 	</div>
-	<hr>
 	<div class="margin">
 		<img class="caption-img center" src="{{ url }}"/>
 	</div>
@@ -22,6 +21,9 @@
 		</form>
 	</div>
 	<hr>
+    <div style="text-align: center;">
+     <h3>Enter captions to see how they stack up against one another! </h3>
+    </div>
 	<form action="/compare_captions" method="post" class="flex-container input-buttons margin" id="f1">
 		<div>
 			<textarea name="user_caption" value="{{ c1 if c1 is not none }}" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." class="input-button {{ 'caption-winner' if winner == 0 }} {{ 'caption-loser' if winner == 1 }}" name="user_input" style="resize: none; height: 20vw; font-size: 14px" cols=20></textarea>
@@ -35,11 +37,11 @@
 			<table style="width: 40vw">
 				<tr>
 					<th>Rank</th>
-					<th>Score</th>
+					<th>Funniness</th>
 					<th>Caption</th>
 				</tr>
 				{% for key, value in options.items() %}
-				<tr id="reload" {% if key in new %} bgcolor="yellow"{% endif %}>
+				<tr id="reload" {% if key in new %} bgcolor="#FFF4C9"{% endif %}>
 					<td align="center" id="reload">{{loop.index}}</td>
 					<td align="center">{{value}}</td>
 					<td>{{key}}</td>
