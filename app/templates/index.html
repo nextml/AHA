@@ -5,24 +5,19 @@
     </head>
     <body class="app">
 	<div class="text--center margin">
-        	<h1 style="margin-top: 40px">AHA: an AI Humor Assisstant</h1>
+        	<h1 style="margin-top: 40px">AHA: an AI Humor Assistant</h1>
 		<h3>Here's a New Yorker Caption Contest cartoon:</h3>
 	</div>
 	<div class="margin">
 		<img class="caption-img center" src="{{ url }}"/>
 	</div>
 	<div class="margin" style="display: flex; justify-content: center">
-		<form action="/next_cartoon" method="post">
-			<button class="center" value="{{ id }}" name="id" type="submit">Next Cartoon</button>
-			<input name="session" type="hidden" value="{{session}}">
-		</form>
 		<form action="/" method="get" style="margin-left: 10px;">
 			<button class="center" type="submit">Reset</button>
 		</form>
 	</div>
-	<hr>
     <div style="text-align: center;">
-     <h3>Enter captions to see how they stack up against one another! </h3>
+     <h3>Enter captions to see how they stack up against one another: </h3>
     </div>
 	<form action="/compare_captions" method="post" class="flex-container input-buttons margin" id="f1">
 		<div>
@@ -30,7 +25,7 @@
 		</div>
 		<div>
 			<input name="session" type="hidden" value="{{session}}">
-			<button type="submit" value="{{ id }}" name="id" id="compare" onclick="disableCompare()">Rank New Captions</button>
+			<button type="submit" value="{{ id }}" name="id" id="compare" onclick="disableCompare()">Rank captions</button>
 			<div class="loader" style="opacity: 0;" id="spin"></div>
 		</div>
 		<div>
@@ -50,11 +45,21 @@
 			</table>
 		</div>
 	</form>
+		<form action="/next_cartoon" method="post">
+			<button class="center" value="{{ id }}" name="id" type="submit">New cartoon</button>
+			<input name="session" type="hidden" value="{{session}}">
+		</form>
     </body>
     <script>
 	function disableCompare() {
 		document.getElementById('spin').style.opacity = 1.0;
 		document.getElementById('f1').submit();
 	}
+    </script>
+    <script>
+        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        if (isSafari) {
+            alert("AHA does not work on Safari. Please use Firefox or Chrome");
+        }
     </script>
 </html>
