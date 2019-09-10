@@ -32,7 +32,7 @@
 			<table style="width: 40vw">
 				<tr>
 					<th>Rank</th>
-					<th>Funniness</th>
+                    <th width="120px">Funniness <span style="font-size: 12px;">(between 0 and 1)</span></th>
 					<th>Caption</th>
 				</tr>
 				{% for key, value in options.items() %}
@@ -43,6 +43,8 @@
 				</tr>
 				{% endfor %}
 			</table>
+            <div style="font-size: 10px;">
+            </div>
 		</div>
 	</form>
 		<form action="/next_cartoon" method="post">

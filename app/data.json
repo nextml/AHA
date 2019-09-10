@@ -4,7 +4,7 @@
 		"img": "https://raw.githubusercontent.com/nextml/caption-contest-data/master/contests/info/passive%2Badaptive/511/511.jpg?raw=true",
 		"contest": 511,
 		"captions": [
-			"Man throwing snowball."
+			"Man throws snowball at child with large shovel."
 		]
 	},
 	{
@@ -12,7 +12,7 @@
 		"img": "https://raw.githubusercontent.com/nextml/caption-contest-data/master/contests/info/adaptive/618/618.jpg?raw=true",
 		"contest": 618,
 		"captions": [
-			"People in front of mantle."
+			"Three people look at a unicorn head on mandle"
 		]
 	},
 	{
@@ -20,7 +20,15 @@
 		"img": "https://raw.githubusercontent.com/nextml/caption-contest-data/master/contests/info/adaptive/617/617.jpg",
 		"contest": 617,
 		"captions": [
-			"Astronaughts in a typical party."
+			"Naked people watch TV as the devil presides."
+		]
+	},
+	{
+		"id": 4,
+		"img": "https://raw.githubusercontent.com/nextml/caption-contest-data/master/contests/info/adaptive/530/530.jpg",
+		"contest": 530,
+		"captions": [
+			"Large sword hangs over king in throne while servant reads scroll aloud"
 		]
 	}
 ]
