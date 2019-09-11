@@ -5,54 +5,63 @@
     </head>
     <body class="app">
 	<div class="text--center margin">
-        	<h1 style="margin-top: 40px">HUMAN: a Humor Advancement ContraptioN</h1>
-		<h3>Bellow is an image from the New Yorker Caption Contest. Enter captions to see how they stack up against one another!</h3>
+        	<h1 style="margin-top: 40px">AHA: an AI Humor Assistant</h1>
+		<h3>Here's a New Yorker Caption Contest cartoon:</h3>
 	</div>
-	<hr>
 	<div class="margin">
 		<img class="caption-img center" src="{{ url }}"/>
 	</div>
 	<div class="margin" style="display: flex; justify-content: center">
-		<form action="/next_cartoon" method="post">
-			<button class="center" value="{{ id }}" name="id" type="submit">Next Cartoon</button>
-			<input name="session" type="hidden" value="{{session}}">
-		</form>
 		<form action="/" method="get" style="margin-left: 10px;">
 			<button class="center" type="submit">Reset</button>
 		</form>
 	</div>
-	<hr>
+    <div style="text-align: center;">
+     <h3>Enter captions to see how they stack up against one another: </h3>
+    </div>
 	<form action="/compare_captions" method="post" class="flex-container input-buttons margin" id="f1">
 		<div>
 			<textarea name="user_caption" value="{{ c1 if c1 is not none }}" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." class="input-button {{ 'caption-winner' if winner == 0 }} {{ 'caption-loser' if winner == 1 }}" name="user_input" style="resize: none; height: 20vw; font-size: 14px" cols=20></textarea>
 		</div>
 		<div>
 			<input name="session" type="hidden" value="{{session}}">
-			<button type="submit" value="{{ id }}" name="id" id="compare" onclick="disableCompare()">Rank New Captions</button>
+			<button type="submit" value="{{ id }}" name="id" id="compare" onclick="disableCompare()">Rank captions</button>
 			<div class="loader" style="opacity: 0;" id="spin"></div>
 		</div>
 		<div>
 			<table style="width: 40vw">
 				<tr>
 					<th>Rank</th>
-					<th>Score</th>
+                    <th width="120px">Funniness <span style="font-size: 12px;">(between 0 and 1)</span></th>
 					<th>Caption</th>
 				</tr>
 				{% for key, value in options.items() %}
-				<tr id="reload" {% if key in new %} bgcolor="yellow"{% endif %}>
+				<tr id="reload" {% if key in new %} bgcolor="#FFF4C9"{% endif %}>
 					<td align="center" id="reload">{{loop.index}}</td>
 					<td align="center">{{value}}</td>
 					<td>{{key}}</td>
 				</tr>
 				{% endfor %}
 			</table>
+            <div style="font-size: 10px;">
+            </div>
 		</div>
 	</form>
+		<form action="/next_cartoon" method="post">
+			<button class="center" value="{{ id }}" name="id" type="submit">New cartoon</button>
+			<input name="session" type="hidden" value="{{session}}">
+		</form>
     </body>
     <script>
 	function disableCompare() {
 		document.getElementById('spin').style.opacity = 1.0;
 		document.getElementById('f1').submit();
 	}
+    </script>
+    <script>
+        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        if (isSafari) {
+            alert("AHA does not work on Safari. Please use Firefox or Chrome");
+        }
     </script>
 </html>

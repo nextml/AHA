@@ -85,3 +85,9 @@ table, th, td {
 }
 
 		
+
+hr {
+  border: 0 none;
+  color: #cccccc;
+  height: 4px;
+  padding: 0; }
