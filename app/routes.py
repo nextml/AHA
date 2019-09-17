@@ -10,7 +10,7 @@ from . import compare_captions as comparator
 app.secret_key = str(hash("joes-secret_key"))
 
 print('Initializing caption funniness comparator...')
-comparator.initialize()
+# comparator.initialize()
 print("...done")
 
 @lru_cache()
@@ -28,9 +28,10 @@ def get_init_options(data):
 
 @app.route('/')
 def index():
-    data = load_data()[0]
-    ret = get_init_options(data)
-    return render_template('index.html', url=data['img'], options=ret, id=0)
+    data = load_data()
+    data = [{ 'url': d['img'], 'cap': d['captions'] } for d in data]
+    print(data)
+    return render_template('index.html', data=data)
 
 
 @app.route('/next_cartoon', methods=["POST"])

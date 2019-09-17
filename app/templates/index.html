@@ -4,12 +4,13 @@
         <title>NEXT - Caption Comparator</title>
     </head>
     <body class="app">
+	<meta id="contest_data" data-name="contest_data" data-other="{{data}}">
 	<div class="text--center margin">
         	<h1 style="margin-top: 40px">AHA: an AI Humor Assistant</h1>
 		<h3>Here's a New Yorker Caption Contest cartoon:</h3>
 	</div>
 	<div class="margin">
-		<img class="caption-img center" src="{{ url }}"/>
+		<img id="contest-img" class="caption-img center" src=""/>
 	</div>
 	<div class="margin" style="display: flex; justify-content: center">
 		<form action="/" method="get" style="margin-left: 10px;">
@@ -35,33 +36,37 @@
                     <th width="120px">Funniness <span style="font-size: 12px;">(between 0 and 1)</span></th>
 					<th>Caption</th>
 				</tr>
-				{% for key, value in options.items() %}
 				<tr id="reload" {% if key in new %} bgcolor="#FFF4C9"{% endif %}>
-					<td align="center" id="reload">{{loop.index}}</td>
-					<td align="center">{{value}}</td>
-					<td>{{key}}</td>
+					<td align="center" id="reload">row</td>
+					<td align="center">value</td>
+					<td>key</td>
 				</tr>
-				{% endfor %}
 			</table>
             <div style="font-size: 10px;">
             </div>
 		</div>
 	</form>
-		<form action="/next_cartoon" method="post">
-			<button class="center" value="{{ id }}" name="id" type="submit">New cartoon</button>
-			<input name="session" type="hidden" value="{{session}}">
-		</form>
+	<button class="center" onclick="nextCartoon()">New cartoon</button>
     </body>
     <script>
 	function disableCompare() {
 		document.getElementById('spin').style.opacity = 1.0;
 		document.getElementById('f1').submit();
 	}
-    </script>
-    <script>
-        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        if (isSafari) {
-            alert("AHA does not work on Safari. Please use Firefox or Chrome");
-        }
+	// set up on app load
+	let data = {{data|tojson}};
+	var curr_idx = 0;
+	var current = data[curr_idx];
+	document.getElementById('contest-img').src = current.url;
+
+	// utility functions
+	function nextCartoon() {
+		curr_idx += 1;
+		if (curr_idx >= data.length) {
+			curr_idx = 0;
+		}
+		current = data[curr_idx];
+		document.getElementById('contest-img').src = current.url;
+	}
     </script>
 </html>
