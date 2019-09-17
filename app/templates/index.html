@@ -18,13 +18,13 @@
     <div style="text-align: center;">
      <h3>Enter captions to see how they stack up against one another: </h3>
     </div>
-	<form action="/compare_captions" method="post" class="flex-container input-buttons margin" id="f1">
+	<div class="flex-container input-buttons margin" id="f1">
 		<div>
-			<textarea name="user_caption" value="{{ c1 if c1 is not none }}" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." class="input-button {{ 'caption-winner' if winner == 0 }} {{ 'caption-loser' if winner == 1 }}" name="user_input" style="resize: none; height: 20vw; font-size: 14px" cols=20></textarea>
+			<textarea id="input_textarea" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." style="resize: none; height: 20vw; font-size: 14px" cols=20></textarea>
 		</div>
 		<div>
 			<input name="session" type="hidden" value="{{session}}">
-			<button type="submit" value="{{ id }}" name="id" id="compare" onclick="disableCompare()">Rank captions</button>
+			<button id="compare" onclick="rankCaptions()">Rank captions</button>
 			<div class="loader" style="opacity: 0;" id="spin"></div>
 		</div>
 		<div>
@@ -39,8 +39,8 @@
 			</table>
             <div style="font-size: 10px;">
             </div>
-		</div>
-	</form>
+	</div>
+	</div>
 	<button class="center" onclick="nextCartoon()">New cartoon</button>
     </body>
     <script>
@@ -70,9 +70,19 @@
 		populateTable(captions);
 	}
 
+	function clearTable() {
+		var c = document.getElementById('cap_table').rows.length;
+		let table = document.getElementById('cap_table');
+		while (c > 1) {
+			table.deleteRow(-1);
+			c -= 1;
+		}
+	}
+
 	function populateTable(data) {
 		// assumes data is an arary of json with a score and text key
-		// clear table
+		clearTable();
+
 		let table = document.getElementById('cap_table');
 		for (var i = 0; i < data.length; i++) {
 			let d = data[i];
@@ -86,6 +96,20 @@
 			c3.innerHTML = d.text;
 			c2.innerHTML = d.score;
 		}
+	}
+
+	function rankCaptions() {
+		let area = document.getElementById('input_textarea');
+		let new_caps = area.value.split('\n');
+		var new_d = [];
+		for (var i = 0; i < new_caps.length; i++) {
+			if (new_caps[i] === "") {
+				continue;
+			}
+			new_d.push({ 'text': new_caps[i], 'score': 8 });	
+		}
+		captions = captions.concat(new_d);
+		populateTable(captions);
 	}
     </script>
 </html>
