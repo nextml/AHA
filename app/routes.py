@@ -22,7 +22,7 @@ def load_data():
 @app.route('/')
 def index():
     data = load_data()
-    data = [{ 'url': d['img'], 'cap': d['captions'] } for d in data]
+    data = [{ 'url': d['img'], 'init_cap': { 'text': d['captions'][0], 'score': '-' } } for d in data]
     return render_template('index.html', data=data)
 
 @app.route('/compare_captions', methods=["POST"])

@@ -28,17 +28,14 @@
 			<div class="loader" style="opacity: 0;" id="spin"></div>
 		</div>
 		<div>
-			<table style="width: 40vw">
-				<tr>
-					<th>Rank</th>
-                    <th width="120px">Funniness <span style="font-size: 12px;">(between 0 and 1)</span></th>
-					<th>Caption</th>
-				</tr>
-				<tr id="reload" {% if key in new %} bgcolor="#FFF4C9"{% endif %}>
-					<td align="center" id="reload">row</td>
-					<td align="center">value</td>
-					<td>key</td>
-				</tr>
+			<table style="width: 40vw" id="cap_table">
+				<thead>
+					<tr>
+						<th>Rank</th>
+			    			<th width="120px">Funniness <span style="font-size: 12px;">(between 0 and 1)</span></th>
+						<th>Caption</th>
+					</tr>
+				</thead>
 			</table>
             <div style="font-size: 10px;">
             </div>
@@ -69,7 +66,26 @@
 		}
 		current = data[curr_idx];
 		document.getElementById('contest-img').src = current.url;
-		captions = current.cap[0];
+		captions = [{ 'text': current.init_cap.text, 'score': current.init_cap.score }];
+		populateTable(captions);
+	}
+
+	function populateTable(data) {
+		// assumes data is an arary of json with a score and text key
+		// clear table
+		let table = document.getElementById('cap_table');
+		for (var i = 0; i < data.length; i++) {
+			let d = data[i];
+			let row = table.insertRow(i+1);
+			let c1 = row.insertCell(0);	
+			c1.style = "text-align: center;";
+			let c2 = row.insertCell(1);	
+			c2.style = "text-align: center;";
+			let c3 = row.insertCell(2);	
+			c1.innerHTML = i + 1;
+			c3.innerHTML = d.text;
+			c2.innerHTML = d.score;
+		}
 	}
     </script>
 </html>
