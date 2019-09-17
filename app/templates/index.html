@@ -12,10 +12,8 @@
 	<div class="margin">
 		<img id="contest-img" class="caption-img center" src=""/>
 	</div>
-	<div class="margin" style="display: flex; justify-content: center">
-		<form action="/" method="get" style="margin-left: 10px;">
-			<button class="center" type="submit">Reset</button>
-		</form>
+	<div class="margin" style="display: flex; justify-content: center; margin-left: 10px;">
+		<button class="center" onclick="nextCartoon(true)">Reset</button>
 	</div>
     <div style="text-align: center;">
      <h3>Enter captions to see how they stack up against one another: </h3>
@@ -55,18 +53,23 @@
 	}
 	// set up on app load
 	let data = {{data|tojson}};
-	var curr_idx = 0;
-	var current = data[curr_idx];
-	document.getElementById('contest-img').src = current.url;
+	var curr_idx = -1; // next cartoon increments this, so making it -1 will give us the cartoon at index 0 first
+	var current;
+	var captions = [];
+	nextCartoon();
 
 	// utility functions
-	function nextCartoon() {
+	function nextCartoon(reset=false) {
 		curr_idx += 1;
 		if (curr_idx >= data.length) {
 			curr_idx = 0;
 		}
+		if (reset === true) {
+			curr_idx = 0;
+		}
 		current = data[curr_idx];
 		document.getElementById('contest-img').src = current.url;
+		captions = current.cap[0];
 	}
     </script>
 </html>

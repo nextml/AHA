@@ -19,34 +19,11 @@ def load_data():
         data = json.loads(data_file.read())
     return data
 
-def get_init_options(data):
-    session['captions'] = data['captions']
-    ret = {}
-    for d in session['captions']:
-        ret[d] = ' -- '
-    return ret
-
 @app.route('/')
 def index():
     data = load_data()
     data = [{ 'url': d['img'], 'cap': d['captions'] } for d in data]
-    print(data)
     return render_template('index.html', data=data)
-
-
-@app.route('/next_cartoon', methods=["POST"])
-def next_cartoon():
-
-    next_id = int(request.form['id']) + 1
-    data = load_data()
-
-    if int(next_id) >= len(data):
-        next_id = 0
-
-    data = data[next_id]
-    ret = get_init_options(data)
-    return render_template('index.html', url=data['img'], options=ret, id=next_id)
-
 
 @app.route('/compare_captions', methods=["POST"])
 def compare_captions():
