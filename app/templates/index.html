@@ -49,6 +49,7 @@
 		document.getElementById('f1').submit();
 	}
 	// set up on app load
+	let url = "http://127.0.0.1:5000/";
 	let data = {{data|tojson}};
 	var curr_idx = -1; // next cartoon increments this, so making it -1 will give us the cartoon at index 0 first
 	var current;
@@ -106,10 +107,20 @@
 			if (new_caps[i] === "") {
 				continue;
 			}
-			new_d.push({ 'text': new_caps[i], 'score': 8 });	
+			new_d.push({ 'text': new_caps[i], 'score': '-' });	
 		}
 		captions = captions.concat(new_d);
-		populateTable(captions);
+
+		var xhttp = new XMLHttpRequest();
+		xhttp.open("POST", url + "compare_captions", true);
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				captions = JSON.parse(xhttp.responseText); 
+				populateTable(captions);
+			}
+		};
+		xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhttp.send('caps=' + JSON.stringify(captions) + '&contest=' + current.contest);
 	}
     </script>
 </html>
