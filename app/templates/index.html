@@ -96,10 +96,18 @@
 			c1.innerHTML = i + 1;
 			c3.innerHTML = d.text;
 			c2.innerHTML = d.score;
+
+			if (d.isNew === true) {
+				row.bgColor = "#FFF4C9";
+			} else {
+				row.bgColor = 'white';
+			}	
 		}
 	}
 
 	function rankCaptions() {
+		document.getElementById('compare').disabled = true;
+
 		let area = document.getElementById('input_textarea');
 		let new_caps = area.value.split('\n');
 		var new_d = [];
@@ -116,7 +124,18 @@
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
 				captions = JSON.parse(xhttp.responseText); 
+				// check for new captions
+				for (var i = 0; i < new_d.length; i++) {
+					let n = new_d[i];
+					for (var j = 0; j < captions.length; j++) {
+						let p = captions[j];
+						if (p.text === n.text) {
+							captions[j].isNew = true;
+						}
+					}
+				}
 				populateTable(captions);
+				document.getElementById('compare').disabled = false;
 			}
 		};
 		xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');

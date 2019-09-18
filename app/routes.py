@@ -30,6 +30,7 @@ def compare_captions():
     caps = json.loads(request.form['caps'])
     contest = int(request.form['contest'])
     caps_raw = [x['text'] for x in caps]
+    caps_raw = list(dict.fromkeys(caps_raw)) # remove duplicates
 
     ranks = comparator.rank_captions(caps_raw, contest)
     ranks = ranks.round(2)
