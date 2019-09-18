@@ -20,7 +20,7 @@
     </div>
 	<div class="flex-container input-buttons margin" id="f1">
 		<div>
-			<textarea id="input_textarea" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." style="resize: none; height: 20vw; font-size: 14px" cols=20></textarea>
+			<textarea id="input_textarea" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." style="resize: none; height: 20vw; font-size: 14px; width: 30vw;" cols=20></textarea>
 		</div>
 		<div>
 			<input name="session" type="hidden" value="{{session}}">
@@ -107,6 +107,7 @@
 
 	function rankCaptions() {
 		document.getElementById('compare').disabled = true;
+		document.getElementById('compare').innerHTML = 'Ranking captions...';
 
 		let area = document.getElementById('input_textarea');
 		let new_caps = area.value.split('\n');
@@ -136,6 +137,7 @@
 				}
 				populateTable(captions);
 				document.getElementById('compare').disabled = false;
+				document.getElementById('compare').innerHTML = 'Rank captions';
 			}
 		};
 		xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
