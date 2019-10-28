@@ -49,9 +49,11 @@
 		document.getElementById('f1').submit();
 	}
 	// set up on app load
-	let url = "http://127.0.0.1:5000/";
+	//let url = "http://127.0.0.1:5000/";
 	let data = {{data|tojson}};
-	var curr_idx = -1; // next cartoon increments this, so making it -1 will give us the cartoon at index 0 first
+    let num_captions = data.length;
+    var curr_idx = -1 + Math.floor(Math.random() * num_captions);
+	// next cartoon increments this, so making subtracting 1 will give us the cartoon at index 0 first
 	var current;
 	var captions = [];
 	nextCartoon();
