@@ -19,59 +19,24 @@ def load_data():
         data = json.loads(data_file.read())
     return data
 
-def get_init_options(data):
-    session['captions'] = data['captions']
-    ret = {}
-    for d in session['captions']:
-        ret[d] = ' -- '
-    return ret
-
 @app.route('/')
 def index():
-    data = load_data()[0]
-    ret = get_init_options(data)
-    return render_template('index.html', url=data['img'], options=ret, id=0)
-
-
-@app.route('/next_cartoon', methods=["POST"])
-def next_cartoon():
-
-    next_id = int(request.form['id']) + 1
     data = load_data()
-
-    if int(next_id) >= len(data):
-        next_id = 0
-
-    data = data[next_id]
-    ret = get_init_options(data)
-    return render_template('index.html', url=data['img'], options=ret, id=next_id)
-
+    data = [{ 'url': d['img'], 'init_cap': { 'text': d['captions'][0], 'score': '-' }, 'contest': d['contest'] } for d in data]
+    return render_template('index.html', data=data)
 
 @app.route('/compare_captions', methods=["POST"])
 def compare_captions():
+    caps = json.loads(request.form['caps'])
+    contest = int(request.form['contest'])
+    caps_raw = [x['text'] for x in caps]
+    caps_raw = list(dict.fromkeys(caps_raw)) # remove duplicates
 
-    id = int(request.form['id'])
-    data = load_data()[id]
-
-    user_caption = request.form['user_caption']
-
-    if (user_caption is None or user_caption.strip().strip('\n') == '') and len(data['captions']) == 1:
-        ret = get_init_options(data)
-        return render_template('index.html', url=data['img'], options=ret, id=id)
-
-    caps = user_caption.split('\n')
-    caps = [c for c in caps if c != '' and c != '\n']
-    if 'captions' not in session:
-        session['captions'] = caps
-    else:
-        session['captions'] = session['captions'] + caps
-
-    ranks = comparator.rank_captions(session['captions'], data['contest'])
+    ranks = comparator.rank_captions(caps_raw, contest)
     ranks = ranks.round(2)
 
-    new = []
+    ret = []
     for k, v in ranks.to_dict().items():
-        if k in caps:
-            new.append(k)
+        ret.append({ 'text': k, 'score': v });
 
-    return render_template('index.html', url=data['img'], options=ranks.to_dict(), id=id, new=new)
+    return json.dumps(ret)

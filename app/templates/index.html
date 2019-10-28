@@ -4,64 +4,147 @@
         <title>NEXT - Caption Comparator</title>
     </head>
     <body class="app">
+	<meta id="contest_data" data-name="contest_data" data-other="{{data}}">
 	<div class="text--center margin">
         	<h1 style="margin-top: 40px">AHA: an AI Humor Assistant</h1>
 		<h3>Here's a New Yorker Caption Contest cartoon:</h3>
 	</div>
 	<div class="margin">
-		<img class="caption-img center" src="{{ url }}"/>
+		<img id="contest-img" class="caption-img center" src=""/>
 	</div>
-	<div class="margin" style="display: flex; justify-content: center">
-		<form action="/" method="get" style="margin-left: 10px;">
-			<button class="center" type="submit">Reset</button>
-		</form>
+	<div class="margin" style="display: flex; justify-content: center; margin-left: 10px;">
+		<button class="center" onclick="nextCartoon(true)">Reset</button>
 	</div>
     <div style="text-align: center;">
      <h3>Enter captions to see how they stack up against one another: </h3>
     </div>
-	<form action="/compare_captions" method="post" class="flex-container input-buttons margin" id="f1">
+	<div class="flex-container input-buttons margin" id="f1">
 		<div>
-			<textarea name="user_caption" value="{{ c1 if c1 is not none }}" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." class="input-button {{ 'caption-winner' if winner == 0 }} {{ 'caption-loser' if winner == 1 }}" name="user_input" style="resize: none; height: 20vw; font-size: 14px" cols=20></textarea>
+			<textarea id="input_textarea" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." style="resize: none; height: 20vw; font-size: 14px; width: 30vw;" cols=20></textarea>
 		</div>
 		<div>
 			<input name="session" type="hidden" value="{{session}}">
-			<button type="submit" value="{{ id }}" name="id" id="compare" onclick="disableCompare()">Rank captions</button>
+			<button id="compare" onclick="rankCaptions()">Rank captions</button>
 			<div class="loader" style="opacity: 0;" id="spin"></div>
 		</div>
 		<div>
-			<table style="width: 40vw">
-				<tr>
-					<th>Rank</th>
-                    <th width="120px">Funniness <span style="font-size: 12px;">(between 0 and 1)</span></th>
-					<th>Caption</th>
-				</tr>
-				{% for key, value in options.items() %}
-				<tr id="reload" {% if key in new %} bgcolor="#FFF4C9"{% endif %}>
-					<td align="center" id="reload">{{loop.index}}</td>
-					<td align="center">{{value}}</td>
-					<td>{{key}}</td>
-				</tr>
-				{% endfor %}
+			<table style="width: 40vw" id="cap_table">
+				<thead>
+					<tr>
+						<th>Rank</th>
+			    			<th width="120px">Funniness <span style="font-size: 12px;">(between 0 and 1)</span></th>
+						<th>Caption</th>
+					</tr>
+				</thead>
 			</table>
             <div style="font-size: 10px;">
             </div>
-		</div>
-	</form>
-		<form action="/next_cartoon" method="post">
-			<button class="center" value="{{ id }}" name="id" type="submit">New cartoon</button>
-			<input name="session" type="hidden" value="{{session}}">
-		</form>
+	</div>
+	</div>
+	<button class="center" onclick="nextCartoon()">New cartoon</button>
     </body>
     <script>
 	function disableCompare() {
 		document.getElementById('spin').style.opacity = 1.0;
 		document.getElementById('f1').submit();
 	}
-    </script>
-    <script>
-        var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-        if (isSafari) {
-            alert("AHA does not work on Safari. Please use Firefox or Chrome");
-        }
+	// set up on app load
+	//let url = "http://127.0.0.1:5000/";
+	let data = {{data|tojson}};
+    let num_captions = data.length;
+    var curr_idx = -1 + Math.floor(Math.random() * num_captions);
+	// next cartoon increments this, so making subtracting 1 will give us the cartoon at index 0 first
+	var current;
+	var captions = [];
+	nextCartoon();
+
+	// utility functions
+	function nextCartoon(reset=false) {
+		curr_idx += 1;
+		if (curr_idx >= data.length) {
+			curr_idx = 0;
+		}
+		if (reset === true) {
+			curr_idx = 0;
+		}
+		current = data[curr_idx];
+		document.getElementById('contest-img').src = current.url;
+		captions = [{ 'text': current.init_cap.text, 'score': current.init_cap.score }];
+		populateTable(captions);
+	}
+
+	function clearTable() {
+		var c = document.getElementById('cap_table').rows.length;
+		let table = document.getElementById('cap_table');
+		while (c > 1) {
+			table.deleteRow(-1);
+			c -= 1;
+		}
+	}
+
+	function populateTable(data) {
+		// assumes data is an arary of json with a score and text key
+		clearTable();
+
+		let table = document.getElementById('cap_table');
+		for (var i = 0; i < data.length; i++) {
+			let d = data[i];
+			let row = table.insertRow(i+1);
+			let c1 = row.insertCell(0);	
+			c1.style = "text-align: center;";
+			let c2 = row.insertCell(1);	
+			c2.style = "text-align: center;";
+			let c3 = row.insertCell(2);	
+			c1.innerHTML = i + 1;
+			c3.innerHTML = d.text;
+			c2.innerHTML = d.score;
+
+			if (d.isNew === true) {
+				row.bgColor = "#FFF4C9";
+			} else {
+				row.bgColor = 'white';
+			}	
+		}
+	}
+
+	function rankCaptions() {
+		document.getElementById('compare').disabled = true;
+		document.getElementById('compare').innerHTML = 'Ranking captions...';
+
+		let area = document.getElementById('input_textarea');
+		let new_caps = area.value.split('\n');
+		var new_d = [];
+		for (var i = 0; i < new_caps.length; i++) {
+			if (new_caps[i] === "") {
+				continue;
+			}
+			new_d.push({ 'text': new_caps[i], 'score': '-' });
+		}
+		captions = captions.concat(new_d);
+
+		var xhttp = new XMLHttpRequest();
+		xhttp.open("POST", "/compare_captions", true);
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				captions = JSON.parse(xhttp.responseText);
+				// check for new captions
+				for (var i = 0; i < new_d.length; i++) {
+					let n = new_d[i];
+					for (var j = 0; j < captions.length; j++) {
+						let p = captions[j];
+						if (p.text === n.text) {
+							captions[j].isNew = true;
+						}
+					}
+				}
+				populateTable(captions);
+				document.getElementById('compare').disabled = false;
+				document.getElementById('compare').innerHTML = 'Rank captions';
+			}
+		};
+		xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+		xhttp.send('caps=' + JSON.stringify(captions) + '&contest=' + current.contest);
+        area.value = "";
+	}
     </script>
 </html>
