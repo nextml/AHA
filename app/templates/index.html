@@ -116,15 +116,15 @@
 			if (new_caps[i] === "") {
 				continue;
 			}
-			new_d.push({ 'text': new_caps[i], 'score': '-' });	
+			new_d.push({ 'text': new_caps[i], 'score': '-' });
 		}
 		captions = captions.concat(new_d);
 
 		var xhttp = new XMLHttpRequest();
-		xhttp.open("POST", url + "compare_captions", true);
+		xhttp.open("POST", "/compare_captions", true);
 		xhttp.onreadystatechange = function() {
 			if (this.readyState == 4 && this.status == 200) {
-				captions = JSON.parse(xhttp.responseText); 
+				captions = JSON.parse(xhttp.responseText);
 				// check for new captions
 				for (var i = 0; i < new_d.length; i++) {
 					let n = new_d[i];
@@ -142,6 +142,7 @@
 		};
 		xhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
 		xhttp.send('caps=' + JSON.stringify(captions) + '&contest=' + current.contest);
+        area.value = "";
 	}
     </script>
 </html>
