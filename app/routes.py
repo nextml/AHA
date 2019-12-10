@@ -16,7 +16,11 @@ print("...done")
 @lru_cache()
 def load_data():
     with app.open_resource('data.json') as data_file:
-        data = json.loads(data_file.read())
+        data = json.load(data_file)
+    img_base = "https://raw.githubusercontent.com/nextml/caption-contest-data/master/contests/info/{contest}/{contest}.jpg"
+    for k, datum in enumerate(data):
+        datum["id"] = k
+        datum["img"] = img_base.format(contest=datum["contest"])
     return data
 
 @app.route('/')
