@@ -1,47 +1,49 @@
 <html>
-    <head>
-	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
-        <title>NEXT - Caption Comparator</title>
-    </head>
-    <body class="app">
-	<meta id="contest_data" data-name="contest_data" data-other="{{data}}">
+  <head>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
+      <title>NEXT - Caption Comparator</title>
+</head>
+<body class="app">
+<meta id="contest_data" data-name="contest_data" data-other="{{data}}">
 	<div class="text--center margin">
         	<h1 style="margin-top: 40px">AHA: an AI Humor Assistant</h1>
 		<h3>Here's a New Yorker Caption Contest cartoon:</h3>
 	</div>
-	<div class="margin">
-		<img id="contest-img" class="caption-img center" src=""/>
-	</div>
-	<div class="margin" style="display: flex; justify-content: center; margin-left: 10px;">
-		<button class="center" onclick="nextCartoon(true)">Reset</button>
-	</div>
+    <img id="contest-img" class="caption-img center" src="" width="500"/>
     <div style="text-align: center;">
      <h3>Enter captions to see how they stack up against one another: </h3>
     </div>
-	<div class="flex-container input-buttons margin" id="f1">
-		<div>
-			<textarea id="input_textarea" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." style="resize: none; height: 20vw; font-size: 14px; width: 30vw;" cols=20></textarea>
+	<div class="input-buttons" id="f1">
+		<div class="center">
+			<textarea class="center" id="input_textarea" placeholder="Type new captions here. Enter each caption on its own line. 20 captions max." style="resize: none; height: 15em; font-size: 14px; width: 90%;" cols=20></textarea>
 		</div>
-		<div>
-			<input name="session" type="hidden" value="{{session}}">
-			<button id="compare" onclick="rankCaptions()">Rank captions</button>
-			<div class="loader" style="opacity: 0;" id="spin"></div>
+		<div class="center">
+			<input class="center" name="session" type="hidden" value="{{session}}">
+            <br>
+			<button class="center" id="compare" onclick="rankCaptions()">Rank captions</button>
+			<div class="loader center" style="opacity: 0;" id="spin"></div>
 		</div>
-		<div>
-			<table style="width: 40vw" id="cap_table">
-				<thead>
+		<div class="center">
+			<table style="width: 90%; margin-left: auto; margin-right: auto; text-align: center;" id="cap_table">
+				<thead >
 					<tr>
 						<th>Rank</th>
-			    			<th width="120px">Funniness <span style="font-size: 12px;">(between 0 and 1)</span></th>
+			    			<th>Funniness <div style="font-size: 12px;"> (between 0 and 1) </div></th>
 						<th>Caption</th>
 					</tr>
 				</thead>
 			</table>
+            <br>
+            <div style="display: flex; justify-content: center;">
+                <button class="center" onclick="nextCartoon(true)">Reset</button>
+            </div>
             <div style="font-size: 10px;">
             </div>
 	</div>
+    <br>
 	</div>
 	<button class="center" onclick="nextCartoon()">New cartoon</button>
+    <br>
     </body>
     <script>
 	function disableCompare() {
@@ -52,7 +54,8 @@
 	//let url = "http://127.0.0.1:5000/";
 	let data = {{data|tojson}};
     let num_captions = data.length;
-    var curr_idx = -1 + Math.floor(Math.random() * num_captions);
+    //var curr_idx = -1 + Math.floor(Math.random() * num_captions);
+    var curr_idx = 0 + Math.floor(Math.random() * num_captions);
 	// next cartoon increments this, so making subtracting 1 will give us the cartoon at index 0 first
 	var current;
 	var captions = [];
@@ -91,9 +94,9 @@
 			let d = data[i];
 			let row = table.insertRow(i+1);
 			let c1 = row.insertCell(0);	
-			c1.style = "text-align: center;";
+			//c1.style = "text-align: center;";
 			let c2 = row.insertCell(1);	
-			c2.style = "text-align: center;";
+			//c2.style = "text-align: center;";
 			let c3 = row.insertCell(2);	
 			c1.innerHTML = i + 1;
 			c3.innerHTML = d.text;
