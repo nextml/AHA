@@ -126,25 +126,6 @@ def get_features(c: str, contest: int):
     return f
 
 
-#  def get_cached_df(contest, alg_label, verbose=True):
-#  fname = f"{contest}-round2-{alg_label}-responses.csv"
-#  DIR = "input-data/"
-#  if fname not in os.listdir(DIR):
-#  url = f"https://github.com/nextml/caption-contest-data/raw/master/contests/responses/{fname}.zip"
-#  cmd = f"wget {url} -O input-data/{fname}.zip"
-#  if verbose:
-#  print("$", cmd)
-#  os.system(cmd)
-#  cmd = f"cd input-data/; unzip {fname}.zip"
-#  if verbose:
-#  print("$", cmd)
-#  os.system(cmd)
-#  df = pd.read_csv(DIR + fname)
-#  if "Unnamed: 0" in df:
-#  df.drop(columns=["Unnamed: 0"], inplace=True)
-#  return df
-
-
 @lru_cache()
 def get_meta(contest):
     base = "https://raw.githubusercontent.com/nextml/caption-contest-data/master/"
