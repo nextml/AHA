@@ -132,13 +132,11 @@ def get_meta(contest):
     fname = "contests/metadata/anomalies.yaml"
     r = requests.get(base + fname)
     with StringIO(r.text) as f:
-        #  anoms = yaml.load(f, Loader=yaml.FullLoader)
         anoms = yaml.safe_load(f)
 
     fname = "contests/metadata/contexts.yaml"
     r = requests.get(base + fname)
     with StringIO(r.text) as f:
-        #  contexts = yaml.load(f, Loader=yaml.FullLoader)
         contexts = yaml.safe_load(f)
     return contexts[contest], anoms[contest]
 
