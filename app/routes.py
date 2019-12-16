@@ -1,6 +1,7 @@
 import json
-from flask import render_template, request
 from functools import lru_cache
+
+from flask import render_template, request
 
 from . import app
 from . import compare_captions as comparator

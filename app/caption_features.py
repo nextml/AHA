@@ -1,18 +1,16 @@
 #
 # Author: Scott Sievert (https://github.com/stsievert)
 #
-import pandas as pd
-from textblob import TextBlob
-import torch
-import cytoolz as toolz
-import spacy
-import numpy as np
-from spacy.attrs import ORTH
 import os
-from pytorch_pretrained_bert import (
-    OpenAIGPTTokenizer,
-    OpenAIGPTLMHeadModel,
-)
+
+import cytoolz as toolz
+import numpy as np
+import pandas as pd
+import spacy
+import torch
+from pytorch_pretrained_bert import OpenAIGPTLMHeadModel, OpenAIGPTTokenizer
+from spacy.attrs import ORTH
+from textblob import TextBlob
 
 from . import syllabels_en
 

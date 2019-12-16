@@ -153,16 +153,3 @@ def count(word):
     fallback_cache[word] = count
 
     return count
-
-
-###
-### Phoneme-driven syllable counting
-###
-
-
-def count_decomp(decomp):
-    count = 0
-    for unit in decomp:
-        if gnoetics.phoneme.is_xstressed(unit):
-            count += 1
-    return count

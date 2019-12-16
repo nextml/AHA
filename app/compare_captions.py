@@ -1,15 +1,15 @@
 #
 # Author: Scott Sievert (https://github.com/stsievert)
 #
-import yaml
-from io import StringIO
 from functools import lru_cache
-from typing import Dict, TypeVar
+from io import StringIO
 from pathlib import Path
+from typing import Dict, TypeVar
 
-import requests
-import pandas as pd
 import joblib
+import pandas as pd
+import requests
+import yaml
 
 from . import caption_features
 
