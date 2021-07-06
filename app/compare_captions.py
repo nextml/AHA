@@ -1,16 +1,15 @@
 #
 # Author: Scott Sievert (https://github.com/stsievert)
 #
-import os
-import yaml
-from io import StringIO
 from functools import lru_cache
-from typing import Dict, TypeVar
+from io import StringIO
 from pathlib import Path
+from typing import Dict, TypeVar
 
-import requests
-import pandas as pd
 import joblib
+import pandas as pd
+import requests
+import yaml
 
 from . import caption_features
 
@@ -127,37 +126,18 @@ def get_features(c: str, contest: int):
     return f
 
 
-def get_cached_df(contest, alg_label, verbose=True):
-    fname = f"{contest}-round2-{alg_label}-responses.csv"
-    DIR = "input-data/"
-    if fname not in os.listdir(DIR):
-        url = f"https://github.com/nextml/caption-contest-data/raw/master/contests/responses/{fname}.zip"
-        cmd = f"wget {url} -O input-data/{fname}.zip"
-        if verbose:
-            print("$", cmd)
-        os.system(cmd)
-        cmd = f"cd input-data/; unzip {fname}.zip"
-        if verbose:
-            print("$", cmd)
-        os.system(cmd)
-    df = pd.read_csv(DIR + fname)
-    if "Unnamed: 0" in df:
-        df.drop(columns=["Unnamed: 0"], inplace=True)
-    return df
-
-
 @lru_cache()
 def get_meta(contest):
     base = "https://raw.githubusercontent.com/nextml/caption-contest-data/master/"
     fname = "contests/metadata/anomalies.yaml"
     r = requests.get(base + fname)
     with StringIO(r.text) as f:
-        anoms = yaml.load(f, Loader=yaml.FullLoader)
+        anoms = yaml.safe_load(f)
 
     fname = "contests/metadata/contexts.yaml"
     r = requests.get(base + fname)
     with StringIO(r.text) as f:
-        contexts = yaml.load(f, Loader=yaml.FullLoader)
+        contexts = yaml.safe_load(f)
     return contexts[contest], anoms[contest]
 
 
@@ -167,13 +147,7 @@ def compare_captions(c1, c2, contest):
     f2 = get_features(c2, contest)
     diff = f1 - f2
     info = predict(diff, contest)
-    info.update(
-        {
-            "caption_pos": c1,
-            "caption_neg": c2,
-            "contest": contest
-        }
-    )
+    info.update({"caption_pos": c1, "caption_neg": c2, "contest": contest})
     return info
 
 
@@ -186,9 +160,7 @@ def rank_captions(caps, contest):
             out.append(compare_captions(c1, c2, contest))
     out = pd.DataFrame(out)
     pairwise = out.pivot_table(
-        index="caption_neg",
-        columns="caption_pos",
-        values="funnier",
+        index="caption_neg", columns="caption_pos", values="funnier",
     )
     borda = pairwise.sum(skipna=True)
     borda.sort_values(ascending=False, inplace=True)

@@ -1,4 +1,4 @@
-import string, re, os
+import re
 
 ###
 ### Fallback syllable counter
@@ -72,18 +72,29 @@ unostentatious 5
 
 fallback_cache = {}
 
-fallback_subsyl = ["cial", "tia", "cius", "cious", "gui", "ion", "iou",
-                   "sia$", ".ely$"]
+fallback_subsyl = ["cial", "tia", "cius", "cious", "gui", "ion", "iou", "sia$", ".ely$"]
 
-fallback_addsyl = ["ia", "riet", "dien", "iu", "io", "ii",
-                   "[aeiouy]bl$", "mbl$",
-                   "[aeiou]{3}",
-                   "^mc", "ism$",
-                   "(.)(?!\\1)([aeiouy])\\2l$",
-                   "[^l]llien",
-                   "^coad.", "^coag.", "^coal.", "^coax.",
-                   "(.)(?!\\1)[gq]ua(.)(?!\\2)[aeiou]",
-                   "dnt$"]
+fallback_addsyl = [
+    "ia",
+    "riet",
+    "dien",
+    "iu",
+    "io",
+    "ii",
+    "[aeiouy]bl$",
+    "mbl$",
+    "[aeiou]{3}",
+    "^mc",
+    "ism$",
+    "(.)(?!\\1)([aeiouy])\\2l$",
+    "[^l]llien",
+    "^coad.",
+    "^coag.",
+    "^coal.",
+    "^coax.",
+    "(.)(?!\\1)[gq]ua(.)(?!\\2)[aeiou]",
+    "dnt$",
+]
 
 
 # Compile our regular expressions
@@ -92,8 +103,10 @@ for i in range(len(fallback_subsyl)):
 for i in range(len(fallback_addsyl)):
     fallback_addsyl[i] = re.compile(fallback_addsyl[i])
 
+
 def _normalize_word(word):
     return word.strip().lower()
+
 
 # Read our syllable override file and stash that info in the cache
 for line in specialSyllables_en.splitlines():
@@ -102,6 +115,7 @@ for line in specialSyllables_en.splitlines():
         toks = line.split()
         assert len(toks) == 2
         fallback_cache[_normalize_word(toks[0])] = int(toks[1])
+
 
 def count(word):
     word = _normalize_word(word)
@@ -138,15 +152,4 @@ def count(word):
     # Cache the syllable count
     fallback_cache[word] = count
 
-    return count
-
-###
-### Phoneme-driven syllable counting
-###
-
-def count_decomp(decomp):
-    count = 0
-    for unit in decomp:
-        if gnoetics.phoneme.is_xstressed(unit):
-            count += 1
     return count

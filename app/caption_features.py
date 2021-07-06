@@ -1,21 +1,16 @@
 #
 # Author: Scott Sievert (https://github.com/stsievert)
 #
-import pandas as pd
-import pickle
-from textblob import TextBlob
-import torch
-import math
-import cytoolz as toolz
-import spacy
-import numpy as np
-from spacy.attrs import ORTH
 import os
-from pytorch_pretrained_bert import (
-    OpenAIGPTTokenizer,
-    OpenAIGPTModel,
-    OpenAIGPTLMHeadModel,
-)
+
+import cytoolz as toolz
+import numpy as np
+import pandas as pd
+import spacy
+import torch
+from pytorch_pretrained_bert import OpenAIGPTLMHeadModel, OpenAIGPTTokenizer
+from spacy.attrs import ORTH
+from textblob import TextBlob
 
 from . import syllabels_en
 
@@ -100,7 +95,6 @@ def get_joke_location(caption, full=False):
     perplexities = np.array(perplexities)
     idx = np.argmin(perplexities)
 
-    N = len(perplexities)
     # Between 1 and 4
     phrase = " ".join(ngrams[idx])
     word = str(ngrams[idx][-1])
@@ -305,26 +299,11 @@ def stats(caption, C, A):
 
     """
     caption_doc = nlp(caption, disable=nlp_disable)
-    try:
-        d1 = textblob_stats(caption)
-    except:
-        d1 = {"erred_textblob": True}
-    try:
-        d2 = spacy_stats(caption)
-    except:
-        d2 = {"erred_spacy": True}
-    try:
-        d3 = readability(caption)
-    except:
-        d3 = {"erred_readability": True}
-    try:
-        d4 = get_joke_location(caption)
-    except:
-        d4 = {"erred_location": True}
-    try:
-        d5 = get_similarity(caption_doc, C, A)
-    except:
-        d5 = {"erred_similarity": True}
+    d1 = textblob_stats(caption)
+    d2 = spacy_stats(caption)
+    d3 = readability(caption)
+    d4 = get_joke_location(caption)
+    d5 = get_similarity(caption_doc, C, A)
     return {**d1, **d2, **d3, **d4, **d5}
 
 
